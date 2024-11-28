@@ -1,0 +1,13 @@
+This functionality is implemented for ES either on/prem or in the Cloud.
+
+The 2 programs read the BUM csv logs on-prem and write them with enrichmentin ES either on -prem or in the Cloud
+
+For writing in the Cloud, the prog needs parameters to connect to ES in the Cloud which are in the example.ini config file
+
+- BUFF_Enrich_X_Cloud.py
+- BUFF_Enrich_X.py
+- example.ini
+- param_data.json
+
+
+
