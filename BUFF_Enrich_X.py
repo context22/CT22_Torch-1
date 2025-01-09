@@ -1,3 +1,8 @@
+#=======================================================
+#   Dec 16 2024
+#  Change :
+# - get the Metadata from Common instead of a Index in ES
+#=======================================================
 import json
 from datetime import datetime
 import time
@@ -6,7 +11,7 @@ import sys
 import glob
 from elasticsearch import Elasticsearch, helpers
 import pandas as pd
-
+from datetime import date
 
 class BuffEnrich:
 
@@ -49,6 +54,7 @@ class BuffEnrich:
         for hit in A_COLLECTORS_tmp['hits']['hits']:
             self.myListCollectors.append(hit["_source"])
 
+        # breakpoint()
 
     def DataFile_List(self):
         print ("DataFile_List")
@@ -60,7 +66,10 @@ class BuffEnrich:
         DataFile=[]
         for file in self.csvFiles:
           if "BUFF_USAGE" in file:
-           COLL = file.split('_')[1]
+           # breakpoint()
+           COLLt = file.split('/')[-1]
+           print (COLLt)
+           COLL = COLLt.split('_')[1]
            print (COLL)
            DataFile.append(COLL)
            DataFile.append(file)
@@ -71,6 +80,7 @@ class BuffEnrich:
     # ---- Lookups into the Metadata  -----
     def lookup_A_COLLECTOR(self,COLL):
       print ("lookup_A_COLLECTOR")
+      # breakpoint()
       if COLL != None:
          # print ("Youpi ...",SRC_PRG)
          for i in range(0,len(self.myListCollectors)):
@@ -99,8 +109,12 @@ class BuffEnrich:
       print('Parsed after', len(parsed))
       # print(self.index)
       # input()
+      today=date.today()
+      year = today.year
+      month = today.month
+      day = today.day
       try:
-         response = helpers.bulk(self.es,parsed, index=self.index)
+         response = helpers.bulk(self.es,parsed, index=self.index+"-"+str(year)+"."+str(month)+"."+str(day))
          print ("ES response : ", response )
       except Exception as e:
          print ("ES Error :", e)
